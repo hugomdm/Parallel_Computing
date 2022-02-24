@@ -1,6 +1,6 @@
 # program: spuRs/resources/scripts/forest_fire.r
 # forest fire simulation
-
+rm(list = ls())
 neighbours <- function(A, i, j) {
   # calculate number of neighbours of A[i,j] that are infected
   # we have to check for the edge of the grid
@@ -32,17 +32,20 @@ forest.fire.plot <- function(X) {
     }
   }
 }
-forest.fire.original <- function(X, a, b, pausing = FALSE) {
+forest.fire <- function(X, a, b, pausing = FALSE) {
   # simulate forest fire epidemic model
   # X[i, j] = 2 for susceptible; 1 for infected; 0 for removed
   # set up plot
-  #plot(c(1,nrow(X)), c(1,ncol(X)), type = "n", xlab = "", ylab = "")
-  #forest.fire.plot(X)
+  plot(c(1,nrow(X)), c(1,ncol(X)), type = "n", xlab = "", ylab = "")
   # main loop
-  for (iterator in 1:20){
+  burning <- TRUE
+  while (burning) {
+    burning <- FALSE
     # check if pausing between updates
     if (pausing) {
       input <- readline("hit any key to continue")
+      forest.fire.plot(X)
+      
     }
     # update
     B <- X
@@ -53,6 +56,7 @@ forest.fire.original <- function(X, a, b, pausing = FALSE) {
             B[i, j] <- 1
           }
         } else if (X[i, j] == 1) {
+          burning <- TRUE
           if (runif(1) < b) {
             B[i, j] <- 0
           }
@@ -60,22 +64,24 @@ forest.fire.original <- function(X, a, b, pausing = FALSE) {
       }
     }
     X <- B
-    # plot
-    #forest.fire.plot(X)
   }
   return(X)
 }
-# spark
- set.seed(3)
- X <- matrix(2, 21, 21)
- X[11, 11] <- 1
+
+#---------------------- Code to Test the solution --------------------------- #
+# set.seed(3)
+# X <- matrix(2, 21, 21)
+# X[11, 11] <- 1
 # # big fires
-X <- forest.fire.original(X, .2, .4, FALSE)
+# result <- forest.fire(X, .2, .4, FALSE)
+# # # # Tests to be run when modifying the code
+# runTest <- function(result) {
+#    stopifnot(result[1, 1] ==  2)
+#    stopifnot(result[7,12] == 2)
+#    stopifnot(result[11,19] == 0)
+#    stopifnot(result[15,8] == 2)
+#    stopifnot(result[15,7] == 0)
+#    stopifnot(result[21,17] == 0)
+# }
+# runTest(result)
 
-
-# # medium fires
-#X <- forest.fire(X, .07, .2, TRUE)
-#X <- forest.fire(X, .1, .4, TRUE)
-# small fires
-#X <- forest.fire(X, .05, .2, TRUE)
-#X <- forest.fire(X, .07, .4, TRUE)
