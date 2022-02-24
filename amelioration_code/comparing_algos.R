@@ -9,8 +9,10 @@ library(microbenchmark)
 
 source("forest_fire_original.R")
 source("forest_file_commented.R")
-source("forest_file_neighboord_optimized.R")
+source("forest_fire_vectorized.R")
+source("forest_fire_apply.R")
 sourceCpp("forest_fire_rcpp.cpp")
+
 
 
 #sourceCpp("do3_optimization_rcpp.cpp")
@@ -29,7 +31,8 @@ infection_matrix[11, 11] <- 1
 #forest_fire_commented(infection_matrix, .2, .4, FALSE)
 microbenchmark(#forest.fire.original(infection_matrix, .2, .4, FALSE), 
                forest_fire_commented(infection_matrix, .2, .4, FALSE),
-               forest_fire_opt_neigh_commented(infection_matrix, .2, .4, FALSE),
+               forest_fire_apply(infection_matrix, .2, .4, FALSE),
+               forest_fire_vectorized(infection_matrix, .2, .4, FALSE),
                forest_fire_rcpp(infection_matrix, .2, .4, FALSE),
                times=10)
 

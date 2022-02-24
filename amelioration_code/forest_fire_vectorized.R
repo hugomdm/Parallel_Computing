@@ -1,3 +1,4 @@
+
 ## File: forest_file_optimized.r
 ## Students : Lia Furtado and Hugo Vinsion
 ## Description : Projet Parallel Computing 2021 - Code improvements
@@ -5,50 +6,25 @@
 
 ## Date : 21 February 2022
 
-find_infected_neighbors <- function(infection_matrix, i, j) {
-  #' Function to find for the point infection_matrix[i,j] the neighbors that were infected 
-  #' from all the 8 edges from a point in the matrix
-  #' For point (x, y) the points (x + 1, y + 1), (x + 1, y), (x + 1, y + 1),
-  #'(x, y  + 1), (x, y + 1), (x + 1, y + 1), (x + 1, y), and (x + 1, y + 1) are considered neighbors.
-  #'
-  #' @param infection_matrix : main infection_matrix that maps an individual and 
-  #' its current state state (unburnt, on fire or burnt out)  
-  #' @param i: current row in the  infection_matrix to detect neighbors
-  #' @param j: current column in the  infection_matrix to detect neighbors
-  #'
-  #' @return number_infected: number of infected individuals after checking the 8 neighbors of a point
-  #' 
-  #'  
-  number_infected <- 0
-  # sum across row i - 1
-  if (i > 1) {
-    if (j > 1) {
-      number_infected <- number_infected + (infection_matrix[i-1, j-1] == 1)
-    }
-    number_infected <- number_infected + (infection_matrix[i-1, j] == 1)
-    if (j < ncol(infection_matrix)) {
-      number_infected <- number_infected + (infection_matrix[i-1, j+1] == 1)
-    }
-  }
-  # sum across row i
-  if (j > 1) {
-    number_infected <- number_infected + (infection_matrix[i, j-1] == 1)
-  }
-  number_infected <- number_infected + (infection_matrix[i, j] == 1)
-  if (j < ncol(infection_matrix)) {
-    number_infected <- number_infected + (infection_matrix[i, j+1] == 1)
-  }
-  # sum across row i + 1
-  if (i < nrow(infection_matrix)) {
-    if (j > 1) {
-      number_infected <- number_infected + (infection_matrix[i+1, j-1] == 1)
-    }
-    number_infected <- number_infected + (infection_matrix[i+1, j] == 1)
-    if (j < ncol(infection_matrix)) {
-      number_infected <- number_infected + (infection_matrix[i+1, j+1] == 1)
-    }
-  }
-  return(number_infected)
+find_infected_neighbors_vectorized <- function(infection_matrix) {
+  infection_matrix <- t(infection_matrix)
+  n <- nrow(infection_matrix)
+  mat.pad = rbind(NA, cbind(NA, infection_matrix, NA), NA)
+  
+  ind = 2:(n + 1) # row/column indices of the "middle"
+  
+  neigh = rbind(N  = c(mat.pad[ind - 1, ind    ]),
+                NE = c(mat.pad[ind - 1, ind + 1]),
+                E  = c(mat.pad[ind    , ind + 1]),
+                SE = c(mat.pad[ind + 1, ind + 1]),
+                S  = c(mat.pad[ind + 1, ind    ]),
+                SW = c(mat.pad[ind + 1, ind - 1]),
+                W  = c(mat.pad[ind    , ind - 1]),
+                NW = c(mat.pad[ind - 1, ind - 1]), 
+                R = c(mat.pad[ind , ind ]))
+  
+  number_infected_neigh <- colSums(neigh==1, na.rm=TRUE)
+  return(number_infected_neigh)
 }
 forest_fire_plot <- function(infection_matrix) {
   # plot infected and removed individuals
@@ -63,7 +39,7 @@ forest_fire_plot <- function(infection_matrix) {
     }
   }
 }
-forest_fire_commented <- function(infection_matrix, alpha, beta, pausing = FALSE) {
+forest_fire_vectorized <- function(infection_matrix, alpha, beta, pausing = FALSE) {
   #' Function to simulate a forest fire epidemic model
   #' For infection_matrix[i, j] = 2, person is unburnt; 1 for on fire; 0 for burnt out.
   #' An on fire individual can only infect unburnt individuals if they are neighbors.
@@ -79,43 +55,41 @@ forest_fire_commented <- function(infection_matrix, alpha, beta, pausing = FALSE
   #plot(c(1,nrow(infection_matrix)), c(1,ncol(infection_matrix)), type = "n", xlab = "", ylab = "")
   #forest_fire_plot(infection_matrix)
   # main loop
-  
   for (iterator in 1:20){
     # check if pausing between updates
     if (pausing) {
       input <- readline("hit any key to continue")
     }
-    # make a copy of the infection_matrix
-    infection_matrix_copy <- infection_matrix
+    
+    number_infected <- find_infected_neighbors_vectorized(infection_matrix)
+    infection_vector =c(t(infection_matrix))
+    infection_vector_copy <- infection_vector
     #iterate though the infection_matrix 
-    for (i in 1:nrow(infection_matrix)) {
-      for (j in 1:ncol(infection_matrix)) {
+    for (i in 1:length(infection_vector)) {
         #if an individual is unburt
-        if (infection_matrix[i, j] == 2) {
+        if (infection_vector[i] == 2) {
           #check number of neighbors are infected 
-          n_infected <- find_infected_neighbors(infection_matrix, i, j)
           #if the probability is bigger than the probability remaining uninfected (1 alpha)^n_infected
-          if (runif(1) > (1 - alpha)^n_infected) {
-
+          if (runif(1) > (1 - alpha)^number_infected[i]) {
             #it changes status for on fire
-            infection_matrix_copy[i, j] <- 1
+            infection_vector_copy[i] <- 1
           }
           #else if an individual is on fire
-        } else if (infection_matrix[i, j] == 1) {
+        } else if (infection_vector[i] == 1) {
           #the forest will continue burning 
           #if probability if less than beta an individual is removed
           if (runif(1) < beta) {
             #it will be burn out
-            infection_matrix_copy[i, j] <- 0
+            infection_vector_copy[i] <- 0
           }
         }
-
-      }
+  
     }
-    infection_matrix <- infection_matrix_copy
-    # plot
-    #forest_fire_plot(infection_matrix)
+    infection_matrix <- matrix(unlist(infection_vector_copy), ncol = ncol(infection_matrix), byrow = TRUE)
   }
+  # plot
+  #forest_fire_plot(infection_matrix)
+  
   return(infection_matrix)
 }
 
@@ -125,9 +99,8 @@ forest_fire_commented <- function(infection_matrix, alpha, beta, pausing = FALSE
 # # # #in the central position of the infection_matrix set a 1 value
 # infection_matrix[11, 11] <- 1
 # 
-# result <- forest_fire_commented(infection_matrix, .2, .4, FALSE)
-# 
-# # # Tests to be run when modifying the code
+# result <- forest_fire_vectorized(infection_matrix, .2, .4, FALSE)
+# # # # Tests to be run when modifying the code
 # runTest <- function(result) {
 #   stopifnot(result[1, 5] ==  1)
 #   stopifnot(result[7,12] == 2)
@@ -137,5 +110,5 @@ forest_fire_commented <- function(infection_matrix, alpha, beta, pausing = FALSE
 #   stopifnot(result[21,17] == 2)
 # }
 # runTest(result)
-
+# 
 

@@ -5,7 +5,7 @@
 
 ## Date : 21 February 2022
 
-find_infected_neighbors_neigh <- function(infection_matrix) {
+find_infected_neighbors_apply <- function(infection_matrix) {
   #' Function to find for the point infection_matrix[i,j] the neighbors that were infected 
   #' from all the 8 edges from a point in the matrix
   #' For point (x, y) the points (x + 1, y + 1), (x + 1, y), (x + 1, y + 1),
@@ -26,19 +26,19 @@ find_infected_neighbors_neigh <- function(infection_matrix) {
   
   ind = 2:(n + 1) # row/column indices of the "middle"
   
-  neigh = rbind(N  = as.vector(mat.pad[ind - 1, ind    ]),
-                NE = as.vector(mat.pad[ind - 1, ind + 1]),
-                E  = as.vector(mat.pad[ind    , ind + 1]),
-                SE = as.vector(mat.pad[ind + 1, ind + 1]),
-                S  = as.vector(mat.pad[ind + 1, ind    ]),
-                SW = as.vector(mat.pad[ind + 1, ind - 1]),
-                W  = as.vector(mat.pad[ind    , ind - 1]),
-                NW = as.vector(mat.pad[ind - 1, ind - 1]), 
-                R = as.vector(mat.pad[ind , ind ]))
+  neigh = rbind(N  = c(mat.pad[ind - 1, ind    ]),
+                NE = c(mat.pad[ind - 1, ind + 1]),
+                E  = c(mat.pad[ind    , ind + 1]),
+                SE = c(mat.pad[ind + 1, ind + 1]),
+                S  = c(mat.pad[ind + 1, ind    ]),
+                SW = c(mat.pad[ind + 1, ind - 1]),
+                W  = c(mat.pad[ind    , ind - 1]),
+                NW = c(mat.pad[ind - 1, ind - 1]), 
+                R = c(mat.pad[ind , ind ]))
   
   
   number_infected_neigh <- apply(neigh, 2, function(x) {
-    length(which(x == 1))})
+    sum(x == 1, na.rm=T)})
   return(number_infected_neigh)
 }
 forest_fire_plot <- function(infection_matrix) {
@@ -54,7 +54,7 @@ forest_fire_plot <- function(infection_matrix) {
     }
   }
 }
-forest_fire_opt_neigh_commented <- function(infection_matrix, alpha, beta, pausing = FALSE) {
+forest_fire_apply <- function(infection_matrix, alpha, beta, pausing = FALSE) {
   #' Function to simulate a forest fire epidemic model
   #' For infection_matrix[i, j] = 2, person is unburnt; 1 for on fire; 0 for burnt out.
   #' An on fire individual can only infect unburnt individuals if they are neighbors.
@@ -77,7 +77,7 @@ forest_fire_opt_neigh_commented <- function(infection_matrix, alpha, beta, pausi
       input <- readline("hit any key to continue")
     }
     # make a copy of the infection_matrix
-    n_infected <- find_infected_neighbors_neigh(infection_matrix)
+    n_infected <- find_infected_neighbors_apply(infection_matrix)
     n_infected <- matrix(unlist(n_infected), nrow(infection_matrix))
     infection_matrix_copy <- infection_matrix
     #iterate though the infection_matrix 
@@ -119,7 +119,7 @@ forest_fire_opt_neigh_commented <- function(infection_matrix, alpha, beta, pausi
 # # # #in the central position of the infection_matrix set a 1 value
 # infection_matrix[11, 11] <- 1
 # 
-# result <- forest_fire_opt_neigh_commented(infection_matrix, .2, .4, FALSE)
+# result <- forest_fire_apply(infection_matrix, .2, .4, FALSE)
 # # # Tests to be run when modifying the code
 # runTest <- function(result) {
 #   stopifnot(result[1, 5] ==  1)
