@@ -1,6 +1,17 @@
 # program: spuRs/resources/scripts/forest_fire.r
 # forest fire simulation
 rm(list = ls())
+
+#' Title
+#'
+#' @param A 
+#' @param i 
+#' @param j 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 neighbours <- function(A, i, j) {
   # calculate number of neighbours of A[i,j] that are infected
   # we have to check for the edge of the grid
@@ -23,15 +34,40 @@ neighbours <- function(A, i, j) {
   }
   return(nbrs)
 }
-forest.fire.plot <- function(X) {
+#' Function plot the spread of fire representation with points 
+#'
+#' @param infection_matrix main infection_matrix that maps an individual and 
+#' its current state state (unburnt, on fire or burnt out)  
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' forest_fire_plot(infection_matrix)
+forest_fire_plot <- function(infection_matrix) {
   # plot infected and removed individuals
-  for (i in 1:nrow(X)) {
-    for (j in 1:ncol(X)) {
-      if (X[i,j] == 1) points(i, j, col = "red", pch = 19)
-      else if (X[i,j] == 0) points(i, j, col = "grey", pch = 19)
+  for (i in 1:nrow(infection_matrix)) {
+    for (j in 1:ncol(infection_matrix)) {
+      if (infection_matrix[i,j] == 1) {
+        points(i, j, col = "red", pch = 19)
+      }
+      else if (infection_matrix[i,j] == 0) {
+        points(i, j, col = "grey", pch = 19)
+      }
     }
   }
 }
+#' Initial Code of the Forest.fire simulation
+#'
+#' @param X 
+#' @param a 
+#' @param b 
+#' @param pausing 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 forest.fire <- function(X, a, b, pausing = FALSE) {
   # simulate forest fire epidemic model
   # X[i, j] = 2 for susceptible; 1 for infected; 0 for removed

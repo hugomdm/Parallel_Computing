@@ -10,67 +10,7 @@
 
 #-------------- Functions ----------------------
 
-#' Function to calculate for each point in the infection_matrix the neighbors that were infected 
-#' from all the 8 edges
-#' For point (x, y) the points (x + 1, y + 1), (x + 1, y), (x + 1, y + 1),
-#'(x, y  + 1), (x, y + 1), (x + 1, y + 1), (x + 1, y), and (x + 1, y + 1) are considered neighbors.
-#'
-#' @param infection_matrix : main infection_matrix that maps an individual and 
-#' its current state state (unburnt, on fire or burnt out)  
-#'
-#' @return number_infected_neigh: vector with the number of infected individuals
-#'for each point in a vector
-#' @export
-#'
-#' @examples
-#' find_infected_neighbors_apply(infection_matrix)
-find_infected_neighbors_apply <- function(infection_matrix) {
-  #setting a the main matrix with padding 
-  infection_matrix <- t(infection_matrix)
-  n <- nrow(infection_matrix)
-  mat.pad = rbind(NA, cbind(NA, infection_matrix, NA), NA)
-  
-  ind = 2:(n + 1) # row/column indices of the "middle"
-  
-  #calculating all the 8 edges and the point neighborhoods
-  neigh = rbind(N  = c(mat.pad[ind - 1, ind    ]),
-                NE = c(mat.pad[ind - 1, ind + 1]),
-                E  = c(mat.pad[ind    , ind + 1]),
-                SE = c(mat.pad[ind + 1, ind + 1]),
-                S  = c(mat.pad[ind + 1, ind    ]),
-                SW = c(mat.pad[ind + 1, ind - 1]),
-                W  = c(mat.pad[ind    , ind - 1]),
-                NW = c(mat.pad[ind - 1, ind - 1]), 
-                R = c(mat.pad[ind , ind ]))
-  
-  #searching in the neighbors the number of points that are infected ( equal to 1)
-  number_infected_neigh <- apply(neigh, 2, function(x) {
-    sum(x == 1, na.rm=T)})
-  return(number_infected_neigh)
-}
-#' Function plot the spread of fire representation with points 
-#'
-#' @param infection_matrix main infection_matrix that maps an individual and 
-#' its current state state (unburnt, on fire or burnt out)  
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' forest_fire_plot(infection_matrix)
-forest_fire_plot <- function(infection_matrix) {
-  # plot infected and removed individuals
-  for (i in 1:nrow(infection_matrix)) {
-    for (j in 1:ncol(infection_matrix)) {
-      if (infection_matrix[i,j] == 1) {
-        points(i, j, col = "red", pch = 19)
-      }
-      else if (infection_matrix[i,j] == 0) {
-        points(i, j, col = "grey", pch = 19)
-      }
-    }
-  }
-}
+
 #' Function to simulate a forest fire epidemic model
 #' For infection_matrix[i, j] = 2, person is unburnt; 1 for on fire; 0 for burnt out.
 #' An on fire individual can only infect unburnt individuals if they are neighbors.
@@ -84,7 +24,8 @@ forest_fire_plot <- function(infection_matrix) {
 #' @return infection_matrix: returns the updated infection_matrix after the simulation
 #' @export
 #'
-#' @examples
+#' @examples 
+#' 
 forest_fire_apply <- function(infection_matrix, alpha, beta, pausing = FALSE) {
 
   #plotting the initial frame

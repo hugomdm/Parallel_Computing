@@ -1,0 +1,6 @@
+useDynLib(ForestFire, .registration=TRUE)
+importFrom(Rcpp, evalCpp)
+exportPattern("^[[:alpha:]]+")
+importFrom("graphics", "points")
+importFrom("stats", "runif")
+importFrom("microbenchmark", "microbenchmark")

@@ -11,14 +11,14 @@
 # ---------------  TO BUILD -------
 #Set the current directory as your working directory in R with the 'setwd' command
 
-library(Rcpp)
-library(microbenchmark)
+#library(Rcpp)
+#library(microbenchmark)
 
-source("forest_fire_original.R")
-source("forest_file_commented.R")
-source("forest_fire_vectorized.R")
-source("forest_fire_apply.R")
-sourceCpp("forest_fire_rcpp.cpp")
+#source("forest_fire_original.R")
+#source("forest_file_commented.R")
+#source("forest_fire_vectorized.R")
+#source("forest_fire_apply.R")
+#sourceCpp("forest_fire_rcpp.cpp")
 
 #----------- Code to Compare the algorithms ----------------------------
 # 1 algo: Initial code from Chapter 21 (Forest Fire Simulation)
@@ -34,13 +34,13 @@ sourceCpp("forest_fire_rcpp.cpp")
 #' @export 
 #'
 #' @examples
-#' comparing_algos()
+#' 
 comparing_algos <- function(){
 set.seed(3)
 infection_matrix <- matrix(2, 21, 21)
 infection_matrix[11, 11] <- 1
 
-result <- microbenchmark(forest.fire(infection_matrix, .2, .4, FALSE), 
+result <- microbenchmark(
                forest_fire_commented(infection_matrix, .2, .4, FALSE),
                forest_fire_apply(infection_matrix, .2, .4, FALSE),
                forest_fire_vectorized(infection_matrix, .2, .4, FALSE),
@@ -50,4 +50,4 @@ return(result)
 }
 #The best performances was the vectorized implementation and the rcpp one, 
 #that manage to reduce significantly the time of execution. 
-comparing_algos()
+#comparing_algos()
