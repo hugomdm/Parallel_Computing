@@ -1,5 +1,4 @@
 library(ggplot2)
-
 gbm <- function(t, mu, sigma, S0){
   #comute Geometric browian movement
   #Parameters: 
@@ -12,38 +11,14 @@ gbm <- function(t, mu, sigma, S0){
   res <- numeric(t)
   res[1] <- S0
   z <- rnorm(t,0,1)
-  
   for (i in seq(from=2, to=t, by=1)){
+    set.seed(10)
     res[i] <- res[i-1] * exp((mu - 0.5*sigma) + sqrt(sigma)* z[i])
   }
-  
   return(res)
 }
 res <- gbm(50, 0.1, 0.3, 1)
 plot(res, type="l")
-
-
-recursive_gbm <- function(t, mu, sigma, S){
-  #comute Geometric browian movement
-  #Parameters: 
-  #x: time of prediction
-  #mu: drift
-  #sigma: volatilty
-  #S0: value of stock at the end of the zero day
-  #return: 
-  #res: vector: all value from 0 to t of GBM prediction 
-  res <- numeric(t)
-  res[1] <- S0
-  z <- rnorm(t,0,1)
-  
-  for (i in seq(from=2, to=t, by=1)){
-    res[i] <- res[i-1] * exp((mu - 0.5*sigma) + sqrt(sigma)* z[i])
-  }
-  
-  return(res)
-}
-
-
 
 
 st <- numeric(1000)
@@ -56,13 +31,13 @@ lst = unlist(lapply(st, log))
 #histogram
 hist(lst)
 
-#test normalité 
+#test normalit? 
 shapiro.test(lst)
-# p-valye = 0.6 -> valeur non significative -> On ne peut pas rejet la normalité 
+# p-valye = 0.6 -> valeur non significative -> On ne peut pas rejet la normalit? 
 quantile = quantile(lst,probs = seq(0.01,0.99,0.01))
 plot(quantile)
 
-#calcule paramètre de la loi Normal ont utilise la moyenne et la variance corrigé 
+#calcule param?tre de la loi Normal ont utilise la moyenne et la variance corrig? 
 #estimateur qui maximise la vraisemblance
 estimation_alpha = mean(lst)
 estimation_beta = var(lst)
@@ -170,7 +145,6 @@ vec_sigma <- c(0.0025, 0.005, 0.01)
 K <- 2 
 t <- 100 
 B <- 0.2
-
 p_v <- numeric(3)
 c <- 1
 for (sigma in vec_sigma){
