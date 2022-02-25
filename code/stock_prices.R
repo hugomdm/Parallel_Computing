@@ -2,10 +2,13 @@ library(ggplot2)
 
 gbm <- function(t, mu, sigma, S0){
   #comute Geometric browian movement
+  #Parameters: 
   #x: time of prediction
   #mu: drift
   #sigma: volatilty
-  #
+  #S0: value of stock at the end of the zero day
+  #return: 
+  #res: vector: all value from 0 to t of GBM prediction 
   res <- numeric(t)
   res[1] <- S0
   z <- rnorm(t,0,1)
@@ -19,12 +22,16 @@ gbm <- function(t, mu, sigma, S0){
 res <- gbm(50, 0.1, 0.3, 1)
 plot(res, type="l")
 
-f <- function(t, mu, sigma, S0){
+
+recursive_gbm <- function(t, mu, sigma, S){
   #comute Geometric browian movement
+  #Parameters: 
   #x: time of prediction
   #mu: drift
   #sigma: volatilty
-  #
+  #S0: value of stock at the end of the zero day
+  #return: 
+  #res: vector: all value from 0 to t of GBM prediction 
   res <- numeric(t)
   res[1] <- S0
   z <- rnorm(t,0,1)
@@ -32,8 +39,10 @@ f <- function(t, mu, sigma, S0){
   for (i in seq(from=2, to=t, by=1)){
     res[i] <- res[i-1] * exp((mu - 0.5*sigma) + sqrt(sigma)* z[i])
   }
-  return(res[length(res)])
+  
+  return(res)
 }
+
 
 
 
