@@ -27,7 +27,6 @@ gbm <- function(t, mu, sigma, S0){
   res[1] <- S0
   z <- rnorm(t,0,1)
   for (i in seq(from=2, to=t, by=1)){
-    set.seed(10)
     res[i] <- res[i-1] * exp((mu - 0.5*sigma) + sqrt(sigma)* z[i])
   }
   return(res)

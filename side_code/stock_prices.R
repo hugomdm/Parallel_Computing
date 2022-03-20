@@ -12,7 +12,6 @@ gbm <- function(t, mu, sigma, S0){
   res[1] <- S0
   z <- rnorm(t,0,1)
   for (i in seq(from=2, to=t, by=1)){
-    set.seed(10)
     res[i] <- res[i-1] * exp((mu - 0.5*sigma) + sqrt(sigma)* z[i])
   }
   return(res)
@@ -20,7 +19,7 @@ gbm <- function(t, mu, sigma, S0){
 res <- gbm(50, 0.1, 0.3, 1)
 plot(res, type="l")
 
-
+#22.6.1 Simulating S 
 st <- numeric(1000)
 for (i in seq(1000)){
   res <- gbm(1000, 0.1, 0.5, 1)
@@ -31,7 +30,7 @@ lst = unlist(lapply(st, log))
 #histogram
 hist(lst)
 
-#test normalit? 
+#test normalité
 shapiro.test(lst)
 # p-valye = 0.6 -> valeur non significative -> On ne peut pas rejet la normalit? 
 quantile = quantile(lst,probs = seq(0.01,0.99,0.01))
@@ -69,7 +68,13 @@ for (mu in vec_mu){
 }
 colnames(data) <- c('mu', 'sigma', 'mean_sample', 'var_sample')
 
-#Estimating ES(t)
+# On peut appercevoir que lorsque sigma (volatility) augmente la moyenne 
+# de l'échantillon augmente et lorsque mu (drift) augmente la moyenne décroit
+# on peut constater que la volatiliy donne l'ordre de grandeur. 
+# Pour la variance elle a tendance à croitre lorsque le drift augmente et la volatility 
+# semble n'avoir aucun impat sur cette dernière. 
+
+#c22.6.2 Estimating ES(t)
 
 simul_s <- function(mu, sigma, t){
   n <- 10000
@@ -127,9 +132,8 @@ V_t <- function(t, mu, sigma, K, B,  S0 = 1){
   v <- numeric(10000)
   for (i in seq(10000)){
     res <- gbm(t, mu, sigma, S0)
-    s   <- res
-    s_t <- s[length(s)]
-    if (s_t >= K && min(s) > B){
+    s_t <- res[length(res)]
+    if (s_t >= K && min(res) > B){
       v[i] <- s_t - K 
     } else {
       v[i] <- 0
@@ -146,11 +150,23 @@ K <- 2
 t <- 100 
 B <- 0.2
 p_v <- numeric(3)
+vec_v <- list()
 c <- 1
 for (sigma in vec_sigma){
   v <- V_t(t, mu, sigma, K, B)
+  vec_v[[c]] <- v
   p_v[c] <- length(which(v>0))/10000
   c <- c + 1 
 }
 
+cdf_1 <- ecdf(vec_v[[1]])
+cdf_2 <- ecdf(vec_v[[2]])
+cdf_3 <- ecdf(vec_v[[3]])
 
+attach(mtcars)
+par(mfrow=c(2,2))
+plot(cdf_1, main='cfd with sigma = 0.0025')
+plot(cdf_2, main='cfd with sigma = 0.005')
+plot(cdf_3, main='cfd with sigma = 0.01')
+
+#Quand Sigma augmente la probabilité d'être égale à 0 augmente. 
