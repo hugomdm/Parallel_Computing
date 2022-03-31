@@ -1,0 +1,14 @@
+Package: furvin
+Type: Package
+Title: Package to Load the Functions for the Parallel Computing Project
+Version: 1.0
+Date: 2022-03-31
+Author: Lia Furtado and Hugo Vinson
+Maintainer: Lia Furtado <lia.furtado@univ-lyon2.com>
+Description: This package loads the function for the Forest Fire simulation and the Stock Prices algorithm. 
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.8), graphics, stats
+LinkingTo: Rcpp
+RoxygenNote: 7.1.2
+NeedsCompilation: yes
+Packaged: 2022-03-31 09:23:09 UTC; lfurtado
