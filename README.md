@@ -1,24 +1,36 @@
 # Parallel_Computing
 
 
-## Projet
-Dans ce projet vous devrez travailler sur 3 axes :
+## Projet Title: 
 
-Amélioration de code R déjà existant
-Création du nouveau code
-Création d’un paquet R
-Nous utiliserons les chapitres 21 et 22 du livre [1], disponibles sur le moodle du cours.
+### FURVIN: Package for the Parallel Computing Project
 
-[1] (Jones, Maillardet & Robinson) "IntroductIon to Scientific Programming and Simulation using R".
+## Projet Description: 
+
+This package was made for the Parallel Computing projet for the Mastet Data Mining of University Lyon 2 in 2022. 
+The package has the implementation a new code  
 
 
-Amélioration de code existant (7 points Max)
-Vous devrez choisir un exemple du chapitre 21 du livre [1]. Le chapitre en question contient différents modèles de simulation orientés vers quelques applications pratiques. Le code étant fonctionnel vous devrez chercher à l’améliorer sans le casser, c’est-à-dire le résultat de l’exécution du code avant et après amélioration doit être identique (modulo d’erreurs d’arrondi numérique). Les améliorations peuvent porter sur la lisibilité et/ou sur la performance du code.
 
-Production du nouveau code (10 points max)
-Vous devrez choisir un problème de simulation du chapitre 22 du livre [1] et implémenter les fonctions nécessaires pour le résoudre. Vous devrez aussi fournir un fichier séparé avec du code à faire exécuter afin de reproduire vos expériences de simulation.
+and the improvement of the existing **forest fire simulation** code from Chapter 21 (21.2.3 Forest fire model) of the 
+(Jones, Maillardet & Robinson) "IntroductIon to Scientific Programming and Simulation using R" book. 
+Finally, we created a package with all these implementations. 
 
-Création d’un paquet R (3 points max)
-Vous devrez encapsuler le code produit dans les deux point précédents dans un paquet R que vous allez créer. Une référence utile est le livre : R packages https://r-pkgs.org/
+This code is written on R with the help of some standard libraries. 
 
-Vous déposerez l'ensemble de votre travail sur le dépôt Github Classroom crée à cet effet.
+## How to Run: 
+
+The testing code is in the code_to_test/ folder. 
+With this code you can test both solution. 
+
+First you just need to install the furvin package:
+
+  > install.packages("furvin_1.0.tar.gz")
+and 
+  > import(furvin)
+
+afterwards you can run the testing codes. 
+
+Credits: 
+This work was made by Lia Furtado and Hugo Vinsion
+
