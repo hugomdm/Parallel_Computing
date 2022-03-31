@@ -12,8 +12,7 @@ This package was made for the Parallel Computing projet for the Mastet Data Mini
 All functions are taken from the book (Jones, Maillardet & Robinson) "IntroductIon to Scientific Programming and Simulation using R".
 
 First of all,  we have improved the existing **forest fire simulation** code from Chapter 21 (21.2.3 Forest fire model)
-Then we implemented the simulations presented in Chapter 22 (22.6 Stock Prices)
-
+Then we created the code from  from **22.6 Stock Prices** simulations presented in Chapter 22.
 Finally, we created a package with all these implementations. 
 
 This code is written on R with the help of some standard libraries. 
