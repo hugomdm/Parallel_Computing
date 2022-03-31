@@ -9,7 +9,7 @@
 
 This package was made for the Parallel Computing projet for the Mastet Data Mining of University Lyon 2 in 2022. 
 The package has the implementation a new code  
-
+(HUGOOOO)
 
 
 and the improvement of the existing **forest fire simulation** code from Chapter 21 (21.2.3 Forest fire model) of the 
