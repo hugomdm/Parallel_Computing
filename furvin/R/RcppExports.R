@@ -9,7 +9,3 @@ forest_fire_rcpp <- function(infection_matrix, alpha, beta, pausing) {
     .Call(`_furvin_forest_fire_rcpp`, infection_matrix, alpha, beta, pausing)
 }
 
-rcpp_hello_world <- function() {
-    .Call(`_furvin_rcpp_hello_world`)
-}
-
