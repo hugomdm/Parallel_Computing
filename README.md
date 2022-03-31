@@ -26,6 +26,7 @@ With this code you can test both solution.
 First you just need to install the furvin package:
 
   > install.packages("furvin_1.0.tar.gz")
+
 and 
   > import(furvin)
 
