@@ -8,12 +8,12 @@
 ## Projet Description: 
 
 This package was made for the Parallel Computing projet for the Mastet Data Mining of University Lyon 2 in 2022. 
-The package has the implementation a new code  
-(HUGOOOO)
 
+All functions are taken from the book (Jones, Maillardet & Robinson) "IntroductIon to Scientific Programming and Simulation using R".
 
-and the improvement of the existing **forest fire simulation** code from Chapter 21 (21.2.3 Forest fire model) of the 
-(Jones, Maillardet & Robinson) "IntroductIon to Scientific Programming and Simulation using R" book. 
+First of all,  we have improved the existing **forest fire simulation** code from Chapter 21 (21.2.3 Forest fire model)
+Then we implemented the simulations presented in Chapter 22 (22.6 Stock Prices)
+
 Finally, we created a package with all these implementations. 
 
 This code is written on R with the help of some standard libraries. 
@@ -28,10 +28,10 @@ First you just need to install the furvin package:
   > install.packages("furvin_1.0.tar.gz")
 
 and 
-  > import(furvin)
+  > library(furvin)
 
 afterwards you can run the testing codes. 
 
 Credits: 
-This work was made by Lia Furtado and Hugo Vinsion
+This work was made by Lia Furtado and Hugo Vinson
 
