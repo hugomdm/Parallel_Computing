@@ -1,21 +1,6 @@
 library(ggplot2)
-gbm <- function(t, mu, sigma, S0){
-  #comute Geometric browian movement
-  #Parameters: 
-  #x: time of prediction
-  #mu: drift
-  #sigma: volatilty
-  #S0: value of stock at the end of the zero day
-  #return: 
-  #res: vector: all value from 0 to t of GBM prediction 
-  res <- numeric(t)
-  res[1] <- S0
-  z <- rnorm(t,0,1)
-  for (i in seq(from=2, to=t, by=1)){
-    res[i] <- res[i-1] * exp((mu - 0.5*sigma) + sqrt(sigma)* z[i])
-  }
-  return(res)
-}
+library(furvin)
+
 res <- gbm(50, 0.1, 0.3, 1)
 plot(res, type="l")
 
@@ -76,25 +61,6 @@ colnames(data) <- c('mu', 'sigma', 'mean_sample', 'var_sample')
 
 #c22.6.2 Estimating ES(t)
 
-simul_s <- function(mu, sigma, t){
-  n <- 10000
-  vec_st <- numeric(n)
-  for (i in seq(n)){
-    res  <- gbm(t, mu, sigma, 1)
-    vec_st[i] <- res[length(res)]
-  }
-  estimate_E <- mean(vec_st)
-  S <- var(vec_st)
-  ci_E_inf <- estimate_E - 1.96*(S/sqrt(n))
-  ci_E_sup <- estimate_E + 1.96*(S/sqrt(n))
-  p  <- length(which(vec_st>1))/n
-  ci_p_inf <- p - 1.96*sqrt( p*(1-p) / n)
-  ci_p_sup <- p + 1.96*sqrt( p*(1-p) / n)
-  return(list("estimate_E" = estimate_E, "ci_E_inf" = ci_E_inf, "ci_E_sup" = ci_E_sup, "p" = p, "ci_p_inf" = ci_p_inf, "ci_p_sup" = ci_p_sup))
-  
-} 
-
-
 vec_mu <- c(0.05, 0.01, 0.01)
 vec_sigma <- c(0.0025, 0.0025, 0.01)
 est_E    <- numeric(3)
@@ -104,7 +70,7 @@ est_p    <- numeric(3)
 ci_p_inf <- numeric(3)
 ci_p_sup <- numeric(3)
 for (i in seq(3)){
-  res         <- simul_s(vec_mu[i], vec_sigma[i], 100)
+  res         <- estimate_Es(vec_mu[i], vec_sigma[i], 100)
   est_E[i]    <- res["estimate_E"]
   ci_E_inf[i] <- res["ci_E_inf"]
   ci_E_sup[i] <- res["ci_E_sup"]
@@ -128,23 +94,7 @@ data2 <- data.frame("mu" = vec_mu,
 
 
 #22.6.3 Down-and-out-call-option
-V_t <- function(t, mu, sigma, K, B,  S0 = 1){
-  v <- numeric(10000)
-  for (i in seq(10000)){
-    res <- gbm(t, mu, sigma, S0)
-    s_t <- res[length(res)]
-    if (s_t >= K && min(res) > B){
-      v[i] <- s_t - K 
-    } else {
-      v[i] <- 0
-    }
-  }
-  return(v)
-}
-
-
-
-mu    <-  0.01
+mu<-  0.01
 vec_sigma <- c(0.0025, 0.005, 0.01)
 K <- 2 
 t <- 100 
@@ -153,7 +103,7 @@ p_v <- numeric(3)
 vec_v <- list()
 c <- 1
 for (sigma in vec_sigma){
-  v <- V_t(t, mu, sigma, K, B)
+  v <- DaO_calloption(t, mu, sigma, K, B)
   vec_v[[c]] <- v
   p_v[c] <- length(which(v>0))/10000
   c <- c + 1 

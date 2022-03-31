@@ -25,7 +25,7 @@ With this code you can test both solution.
 
 First you just need to install the furvin package:
 
-  > install.packages("furvin_1.0.tar.gz")
+  > install.packages("furvin_1.0.tar.gz", repos=NULL)
 
 and 
   > library(furvin)
